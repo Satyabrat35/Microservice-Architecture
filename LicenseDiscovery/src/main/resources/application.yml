@@ -1,0 +1,31 @@
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: 192.168.1.163
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka_url:http://192.168.1.163:8761/eureka/}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      getlicensebyorg:
+        register-health-indicator: true
+        sliding-window-size: 10
+        permitted-number-of-calls-in-half-open-state: 3
+        failure-rate-threshold: 50
+        wait-duration-in-open-state:
+          nanos: 10000
+        record-exceptions:
+          - java.lang.Exception
+  bulkhead:
+    instances:
+      getparticularlicense:
+        max-concurrent-calls: 10
+        max-wait-duration:
+          nanos: 100000
+
+
+

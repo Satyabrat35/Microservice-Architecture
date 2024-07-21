@@ -1,0 +1,14 @@
+server:
+  port: 8761
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+  server:
+    waitTimeInMsWhenSyncEmpty: 5
+  serviceUrl:
+    defaultZone: http://192.168.1.163:8761/eureka
+  instance:
+    hostname: 192.168.1.163
+    prefer-ip-address: true

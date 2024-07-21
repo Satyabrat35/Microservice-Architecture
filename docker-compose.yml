@@ -1,0 +1,71 @@
+services:
+  service_discovery:
+    image: service_discovery:latest
+    container_name: service_discovery
+    ports:
+      - "8761:8761"
+    networks:
+      - my-network
+    healthcheck:
+        test: [ "CMD", "curl", "-f", "http://192.168.1.163:8761/actuator/health" ]
+        interval: 30s
+        timeout: 10s
+        retries: 3
+
+  api-gateway:
+    image: api-gateway:latest
+    container_name: api-gateway
+    ports:
+      - "5555:5555"
+    depends_on:
+      service_discovery:
+        condition: service_healthy
+    networks:
+      - my-network
+
+  licensediscovery:
+    image: licensediscovery:latest
+    container_name: licensediscovery
+    ports:
+      - "8080:8080"
+    depends_on:
+      service_discovery:
+        condition: service_healthy
+    networks:
+      - my-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/purchase
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root35@#
+
+  organizationdiscovery:
+    image: organizationdiscovery:latest
+    container_name: organizationdiscovery
+    ports:
+      - "8081:8081"
+    depends_on:
+      service_discovery:
+        condition: service_healthy
+    networks:
+      - my-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/purchase
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root35@#
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root35@#
+      MYSQL_DATABASE: purchase
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root35@#
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge

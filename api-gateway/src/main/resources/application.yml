@@ -1,0 +1,39 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+#        - id: AuthService
+#          uri:
+#            http://localhost:9093
+#          predicates:
+#            - Path=/account/**
+#          filters:
+#            - AuthenticationService
+        - id: LicenseDiscovery
+          uri:
+            http://localhost:8080
+          predicates:
+            - Path=/license/**
+          filters:
+            - StripPrefix=1
+        - id: OrganizationDiscovery
+          uri:
+            http://localhost:8081
+          predicates:
+            - Path=/organization/**
+          filters:
+            - StripPrefix=1
+
+  eureka:
+    instance:
+      prefer-ip-address: true
+      hostname: 192.168.1.163
+    client:
+      serviceUrl:
+        defaultZone: ${eureka_url:http://192.168.1.163:8761/eureka/}
+
+  authentication:
+    enabled: false
+
+server:
+  port: 5555
