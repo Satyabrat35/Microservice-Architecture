@@ -2,13 +2,6 @@ spring:
   cloud:
     gateway:
       routes:
-#        - id: AuthService
-#          uri:
-#            http://localhost:9093
-#          predicates:
-#            - Path=/account/**
-#          filters:
-#            - AuthenticationService
         - id: LicenseDiscovery
           uri:
             http://localhost:8080
