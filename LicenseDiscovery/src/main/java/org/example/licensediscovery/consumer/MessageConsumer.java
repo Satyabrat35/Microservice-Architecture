@@ -1,5 +1,6 @@
 package org.example.licensediscovery.consumer;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ public class MessageConsumer {
 //    private String groupIds;
 
     @KafkaListener(topics = "microservice_topic", groupId = "${spring.kafka.consumer.group-id}")
-    public void listen(String message) {
-        System.out.println(message);
+    public void listen(ConsumerRecord<String, String> record) {
+        System.out.println(record.key() + " -> " + record.value());
     }
 }
